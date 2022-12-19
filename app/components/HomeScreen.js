@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, ImageBackground } from "react-native";
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import Chart from "./Chart";
 
-const GOOGLE_API_KEY = "AIzaSyCmDwnqi7W8fqlyvGdMMM9eLXQOggNONAc";
+const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
 const viewheight = 190;
 const viewwidth = 315;
 
@@ -20,7 +20,7 @@ function HomeScreen({ route, navigation }) {
     longitudeDelta: LONGITUDE_DELTA,
   };
   fetch(
-    //   "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=37.76174900,27.70397000&rankby=distance&type=gas_station&key=AIzaSyCmDwnqi7W8fqlyvGdMMM9eLXQOggNONAc",
+    //  "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=37.76174900,27.70397000&rankby=distance&type=gas_station&key=AIzaSyCmDwnqi7W8fqlyvGdMMM9eLXQOggNONAc",
     {
       method: "GET",
       headers: {},
@@ -28,7 +28,7 @@ function HomeScreen({ route, navigation }) {
   )
     .then((response) => response.json())
     .then((response) => {
-      setData(response.results[0].geometry);
+      setData(response.results[0]);
       console.log(response);
       console.log("*****************************************");
     })

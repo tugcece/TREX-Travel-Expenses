@@ -12,7 +12,7 @@ import Cars from "./CarsScreen";
 import RadioButton from "./RadioButton";
 import vwradiobtn from "./RadioButtonData";
 
-const GOOGLE_API_KEY = "AIzaSyCmDwnqi7W8fqlyvGdMMM9eLXQOggNONAc";
+const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
 const spacing = "2%";
 
 function SearchScreen({ route, navigation }) {
