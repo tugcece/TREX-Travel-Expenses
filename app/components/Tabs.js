@@ -96,7 +96,7 @@ export default function Tabs() {
         component={TravelScreen}
         options={{
           headerShown: false,
-        //  tabBarStyle: { display: "none" },
+          tabBarStyle: { display: "none" },
           tabBarIconStyle: { marginLeft: "120%", backgroundColor:'red' },
         }}
       />

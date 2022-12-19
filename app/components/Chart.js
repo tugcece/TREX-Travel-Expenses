@@ -1,23 +1,17 @@
 import React from "react";
 import { Text, View, StyleSheet, Dimensions } from "react-native";
-import { StackedBarChart } from "react-native-chart-kit";
+import { ProgressChart } from "react-native-chart-kit";
+
 
 const viewheight = 190;
 const viewwidth = 315;
 const Chart = () => {
   return (
     <>
-      <StackedBarChart
-        data={{
-          legend: ["Gasoline", "Diesel", "LPG"],
-          data: [
-            [100],
-            [30],
-            [40],
-          ],
-          barColors: ["#ebc337", "#e5944e", "#3f48cc"],
-          
-        }}
+      <ProgressChart
+        data={
+          datasets =[0.45, 0.55, 0.8]}
+         //  = ["#ebc337", "#e5944e", "#3f48cc"],}}
         width={315}
         height={190}
         chartConfig={{
@@ -27,7 +21,7 @@ const Chart = () => {
           backgroundGradientFrom: "white",
           backgroundGradientTo: "white",
           decimalPlaces: 2,
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          color: (opacity = 1) => `rgba(32,191,138, ${opacity})`,
           style: {
             borderRadius: '50%',
             

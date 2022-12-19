@@ -4,7 +4,7 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import Chart from "./Chart";
 
 const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
-const viewheight = 190;
+const viewheight = 390;
 const viewwidth = 315;
 
 function HomeScreen({ route, navigation }) {
@@ -37,14 +37,14 @@ function HomeScreen({ route, navigation }) {
     <View style={styles.root}>
       <View style={[styles.item]}>
         <ImageBackground
-          style={{ flex: 1 }}
-          source={require("../assets/homeScreen.png")}
+          style={{ flex: 1 ,top:'-10%' }}
+          source={require("../assets/bckgrnd.png")}
           resizeMode="cover"
         />
         <Text style={[styles.welcome]}>Welcome Back!</Text>
       </View>
       <View style={[styles.item2]}>
-        <Text style={[styles.header, { marginTop: "2%", marginBottom: "4%" }]}>
+        <Text style={[styles.header, { marginTop: "3%", marginBottom: "4%" }]}>
           {" "}
           Fuel Prices{" "}
         </Text>
@@ -70,7 +70,7 @@ function HomeScreen({ route, navigation }) {
             />
           </View>
           <View style={[styles.fueltypes]}>
-            <Text style={[styles.fuelprice]}>$98,98</Text>
+            <Text style={[styles.fuelprice]}>$88,98</Text>
             <Text style={[styles.fueltext, { marginStart: "40%" }]}>Lpg</Text>
             <Image
               source={require("../assets/purplechart.png")}
@@ -78,9 +78,7 @@ function HomeScreen({ route, navigation }) {
             />
           </View>
         </View>
-        <View style={[styles.view]}>
-          <Chart/>
-        </View>
+
         <Text style={[styles.header, { marginTop: "4%" }]}>
           {" "}
           Closest Gas Station{" "}
@@ -135,7 +133,7 @@ const styles = StyleSheet.create({
   welcome: {
     marginLeft: "27%",
     marginTop: "-27%",
-    color: "#FFFDFA",
+    color: "white",
     fontSize: "20%",
     letterSpacing: "4%",
     flex: 1,

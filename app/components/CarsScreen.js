@@ -20,7 +20,7 @@ function CarsScreen({ route, navigation }) {
       <StatusBar hidden />
       <View style={[styles.bar]}>  
         <ImageBackground
-        style={{flex:1 }}
+        style={{flex:1 , top:'-20%'}}
           source={require("../assets/carRoad.png")}
           resizeMode="cover"
         />

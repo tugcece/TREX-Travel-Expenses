@@ -22,7 +22,7 @@ function SearchScreen({ route, navigation }) {
       "https://img.sm360.ca/images/newcar/ca/2023/hyundai/sonata/preferred-2-5l-/sedan/main/2023_hyundai_sonata_gls_main.png",
     model: "Hybrid Car",
     point: 1,
-    description: "Toyota Prius,Tesla,Hyundai Ionique Models...",
+    description: "Toyota Prius,Tesla...",
   };
 
   const [origin, setOrigin] = useState("Origin");
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: "90%",
+    height: "80%",
     zIndex: 1,
   },
   car: {

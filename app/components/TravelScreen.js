@@ -7,9 +7,10 @@ import {
   Pressable,
   FlatList,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
-import Calculus from "./Calculus";
+import SearchScreen from "./SearchScreen";
 
 const text = ">";
 const { width, height } = Dimensions.get("window");
@@ -115,10 +116,50 @@ export default function TravelScreen({ route, navigation }) {
           }}
         />
       </MapView>
+      <TouchableOpacity
+        style={{
+          height: "1%",
+          width: "10%",
+          position: "absolute",
+          backgroundColor: "white",
+          borderRadius: "80%",
+          marginTop: "15%",
+          start: "85%",
+        }}
+        onPress={() => {
+          navigation.navigate(SearchScreen);
+        }}
+      >
+        <Image
+          style={{ marginTop: "45%", start: "20%" }}
+          source={require("../assets/fast-forward.png")}
+          resizeMode="cover"
+        />
+      </TouchableOpacity>
       <View style={[styles.item2]}>
         <View style={[styles.info]}>
+          <View style={[styles.hours]}>
+            <Image
+              style={{ start: "10%", top: "5%" }}
+              source={require("../assets/clock3.png")}
+            />
+            <Text style={[styles.address]}>1 hour 14 mins</Text>
+            <Image
+              style={{ marginStart: "25%", top: "5%" }}
+              source={require("../assets/fuel2.png")}
+            />
+            <Text
+              style={[
+                styles.address,
+                { fontSize: "30%", fontWeight: "400", top: "-2%" },
+              ]}
+            >
+              $560
+            </Text>
+          </View>
+
           <View style={[styles.roads]}>
-            <Text style={styles.address}>
+            <Text style={[styles.address]}>
               Kurtuluş, Adnan Menderes Blv. 98 B, 09020 Aydin Merkez/Aydin,
               Turkey
             </Text>
@@ -126,31 +167,18 @@ export default function TravelScreen({ route, navigation }) {
               style={{ top: 40 }}
               source={require("../assets/distance.png")}
             />
-            <Text style={styles.address}>
+            <Text style={[styles.address]}>
               Alsancak, 1460. Sk. No:8, 35220 Konak/İzmir, Turkey
             </Text>
           </View>
-          <View style={[styles.roads ,{marginTop:60}] }>
-          <Image
-              style={{ marginHorizontal:'20%' }}
-              source={require("../assets/clock.png")}
-            />
-          <Text style={{fontWeight:"500", fontSize:'17%' ,marginTop:2}}>
-          1 hour 14 mins
-        </Text>
-        </View>
-        <View style={[styles.roads]}>
-          <Image
-              style={{ marginHorizontal:'20%' }}
-              source={require("../assets/fuelcost.png")}
-            />
-          <Text style={{fontWeight:"500", fontSize:'17%'}}>
-          1 hour 14 mins
-        </Text>
+          <Text style={[styles.note]}>
+            {" "}
+            Calculations are made based on an ideal speed (60 km/h - 80 km/h).
+            Speeding higher than this speed will cause you to spend more fuel
+            and increase the price.
+          </Text>
         </View>
 
-        </View>
-       
         <FlatList
           data={data}
           keyExtractor={({ id }, index) => id}
@@ -209,7 +237,7 @@ var styles = StyleSheet.create({
     width: "90%",
     borderRadius: "30%",
     backgroundColor: "#FAFAFC",
-    marginTop: "120%",
+    marginTop: "130%",
     position: "absolute",
     shadowColor: "#000",
     shadowOpacity: 0.05,
@@ -273,16 +301,30 @@ var styles = StyleSheet.create({
   roads: {
     flex: 1,
     flexDirection: "row",
+    marginTop: "-25%",
   },
   address: {
     flex: 1,
     flexDirection: "column",
-    padding: "7%",
-    backgroundColor:'red'
+    marginTop: "3%",
+    padding: "4%",
+    width: 200,
   },
-  info:{
-    width:'100%',
-    height:'100%',
- 
-  }
+  info: {
+    width: "100%",
+    height: "100%",
+    padding: "4%",
+  },
+  hours: {
+    height: "25%",
+    flexDirection: "row",
+    marginVertical: "30%",
+    marginTop: "-2%",
+    borderBottomColor: "#20BF8A",
+    borderBottomWidth: 1,
+  },
+  note: {
+    fontWeight: "100",
+    fontSize: 10,
+  },
 });
