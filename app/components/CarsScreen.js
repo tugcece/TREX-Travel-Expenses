@@ -13,17 +13,19 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import vwcars from "./CarTypes";
 const ITEM_SIZE = 120;
 
-function CarsScreen({ route, navigation }) {
+function CarsScreen({ navigation }) {
    const temp = 1; 
+  
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar hidden />
       <View style={[styles.bar]}>  
         <ImageBackground
-        style={{flex:1 , top:'-20%'}}
+        style={{flex:1}}
           source={require("../assets/carRoad.png")}
           resizeMode="cover"
         />
+         <Text style={[styles.welcome]}>Choose Your Car!</Text>
       </View>
       <View style={[styles.bar3]}>
         <FlatList
@@ -33,7 +35,7 @@ function CarsScreen({ route, navigation }) {
             return (
               console.log(item),
                 <TouchableOpacity
-                  onPress={() => {navigation.navigate("SearchScreen", item , temp )}}
+                  onPress={() => {navigation.navigate("SearchScreen", {item} , temp )}}
                 >
                   <View style={styles.item}>
                     <View>
@@ -126,5 +128,13 @@ const styles = StyleSheet.create({
     marginLeft: "10%",
     color: "red",
     position: "absolute",
+  },
+  welcome: {
+    marginLeft: "27%",
+    marginTop: "-27%",
+    color: "white",
+    fontSize: "20%",
+    letterSpacing: "4%",
+    flex: 1,
   },
 });

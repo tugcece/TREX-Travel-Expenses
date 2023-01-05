@@ -8,6 +8,7 @@ export default function RadioButton({ data, onSelect }) {
     onSelect(key);
     setUserOption(key);
   };
+ 
   return (
     <View style={[styles.root]}>
       {data.map((item) => {

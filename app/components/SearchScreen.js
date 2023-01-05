@@ -15,27 +15,50 @@ import vwradiobtn from "./RadioButtonData";
 const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
 const spacing = "2%";
 
-function SearchScreen({ route, navigation }) {
-  const item = {
-    key: "2",
-    image:
-      "https://img.sm360.ca/images/newcar/ca/2023/hyundai/sonata/preferred-2-5l-/sedan/main/2023_hyundai_sonata_gls_main.png",
-    model: "Hybrid Car",
-    point: 1,
-    description: "Toyota Prius,Tesla...",
-  };
-
+function SearchScreen({route,navigation }) {
+ 
+  const {item} = route.params;
   const [origin, setOrigin] = useState("Origin");
   const [destination, setDestination] = useState("Destination");
   const [desGeo, setDesGeo] = useState("DesGeo");
   const [oriGeo, setOriGeo] = useState("OriGeo");
   const [option, setOption] = useState(null);
- 
+  const [originCity, setOriginCity] = useState("izmir");
+  const [destinationCity, setDestinationCity] = useState("İstanbul");
+  const [originName,  setOriginName] = useState("OriginName");
+  const [destinationName,  setDestinationName] = useState("DestinationName");
+  const [originIATA ,setOriginIATA] = useState("adb");
+  const [destinationIATA ,setDestinationIATA] = useState("ist");
+  console.log('itemm'+item);
   var date = new Date().getDate();
   var month = (new Date().getMonth() + 1).toLocaleString("en-us", {
     month: "long",
   });
   var year = new Date().getFullYear();
+  fetch(
+    'https://autocomplete.travelpayouts.com/places2?locale=en&types[]=airport&types[]=city&term='+originCity+'&token=376fe450c0003ae3b6712d3d38da5bf8',
+     {
+       method: "GET",
+       headers: {},
+     })
+     .then((response) => response.json())
+     .then((response) => {
+       setOriginIATA(response[0].code);
+     })
+     .catch((err) => console.error(err));
+     console.log(originIATA)
+     fetch(
+     'https://autocomplete.travelpayouts.com/places2?locale=en&types[]=airport&types[]=city&term='+destinationCity+'&token=376fe450c0003ae3b6712d3d38da5bf8',
+       {
+         method: "GET",
+         headers: {},
+       })
+       .then((response) => response.json())
+       .then((response) => {
+         setDestinationIATA(response[0].code);
+       })
+       .catch((err) => console.error(err));
+       console.log(destinationIATA)
   return (
     <View style={styles.root}>
       <View style={[styles.item]}>
@@ -49,7 +72,7 @@ function SearchScreen({ route, navigation }) {
         <Text style={[styles.header]}>Let's Ride!</Text>
         <View style={[styles.search]}>
           <GooglePlacesAutocomplete
-            GooglePlacesDetailsQuery={{ fields: "geometry" }}
+            GooglePlacesDetailsQuery={{ fields:'formatted_address,geometry,address_components'}}
             fetchDetails={true}
             placeholder="Search"
             query={{
@@ -57,6 +80,8 @@ function SearchScreen({ route, navigation }) {
               language: "en",
             }}
             onPress={(data, details) => {
+              setOriginName(details?.formatted_address);
+              setOriginCity(details?.address_components[4].long_name);
               setOrigin(details?.geometry?.location);
               setOriGeo(
                 details?.geometry?.location.lat +
@@ -69,7 +94,7 @@ function SearchScreen({ route, navigation }) {
         </View>
         <View style={[styles.search2]}>
           <GooglePlacesAutocomplete
-            GooglePlacesDetailsQuery={{ fields: "geometry" }}
+            GooglePlacesDetailsQuery={{ fields:'formatted_address,geometry,address_components'}}
             fetchDetails={true} // you need this to fetch the details object onPress
             placeholder="Search"
             query={{
@@ -77,6 +102,9 @@ function SearchScreen({ route, navigation }) {
               language: "en", // language of the results
             }}
             onPress={(data, details) => {
+              setDestinationName(details?.formatted_address);
+              setDestinationCity(details?.address_components[4].long_name);
+              console.log(details?.formatted_address);
               setDestination(details?.geometry?.location);
               setDesGeo(
                 details?.geometry?.location.lat +
@@ -132,7 +160,15 @@ function SearchScreen({ route, navigation }) {
               destination: destination,
               desGeo: desGeo,
               oriGeo: oriGeo,
-              option:option
+              option:option,
+              originName:originName,
+              destinationName:destinationName,
+              point:item.point,
+              item:{item},
+              originCity:originCity,
+              destinationCity:destinationCity,
+              destinationIATA:destinationIATA,
+              originIATA:originIATA
             })
           }
         >
@@ -313,36 +349,4 @@ const styles = StyleSheet.create({
     marginVertical: "35%",
   },
 });
-/**         <TextInput
-          clearButtonMode="while-editing"
-          style={styles.search}
-          value={origin}
-          onChangeText={(origin) => setOrigin(origin)}
-          placeholder={"Choose Your Location"}
-        />
-        <TextInput
-          clearButtonMode="while-editing"
-          style={styles.search2}
-          value={destination}
-          onChangeText={(destination) => setDestination(destination)}
-          placeholder={"Choose Your Destination"}
-        />
-         fetch(
-    "https://priceline-com-provider.p.rapidapi.com/v1/flights/locations?name=" +
-      origin +
-      "",
-    {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": "9fd9598a03msha30b93fc06019d6p1fe1efjsna67587cc9f26",
-        "X-RapidAPI-Host": "priceline-com-provider.p.rapidapi.com",
-      },
-    }
-  )
-    .then((response) => response.json())
-    .then((response) => {
-      setData(response);
-    })
-    .catch((err) => console.error(err));
 
-        */

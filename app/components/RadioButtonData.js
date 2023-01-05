@@ -1,14 +1,18 @@
+
 export default [
     {
-      key: "1",
-      value: "Gasoline" 
+      key: "gasoline",
+      value: "Gasoline" ,
+     
     },
     {
-      key: "2",
-      value: "Diesel"
+      key: "diesel",
+      value: "Diesel",
+    
     },
     {
-      key: "3",
-      value: "LPG" 
+      key: "lpg",
+      value: "LPG",
+     
     },
 ];

@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
-import HomeScreen from "./HomeScreen";
+import OverView from "./OverView";
 import TravelScreen from "./TravelScreen";
 import SearchScreen from "./SearchScreen";
 import CarsScreen from "./CarsScreen";
@@ -32,6 +32,7 @@ const CustomTabBarButton = ({ children, onPress }) => (
         height: 55,
         borderRadius: 35,
         backgroundColor: "#20BF8A",
+        marginRight: "40%",
       }}
     >
       <Image
@@ -70,9 +71,18 @@ export default function Tabs() {
         },
       }}
     >
+     <Tab.Screen
+        name="CarsScreen"
+        component={CarsScreen}
+        options={{
+          headerShown: false,
+          tabBarStyle: { display: "none" },
+          tabBarIconStyle: { display: "none" ,  marginRight: "110%",},
+        }}
+      />
       <Tab.Screen
-        name="HomeScreen"
-        component={HomeScreen}
+        name="OverView"
+        component={OverView}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
@@ -80,8 +90,8 @@ export default function Tabs() {
               source={require("../assets/home.png")}
               resizeMode="contain"
               style={{
-                marginTop: "35%",
-                marginLeft: "100%",
+                marginTop: "75%",
+                marginRight:'-100%',
                 width: 30,
                 height: 30,
                 tintColor: focused ? "#20BF8A" : "#B3B8BD",
@@ -97,7 +107,7 @@ export default function Tabs() {
         options={{
           headerShown: false,
           tabBarStyle: { display: "none" },
-          tabBarIconStyle: { marginLeft: "120%", backgroundColor:'red' },
+          tabBarIconStyle: { marginLeft: "350%", backgroundColor:'red' },
         }}
       />
       <Tab.Screen
@@ -107,15 +117,7 @@ export default function Tabs() {
           tabBarButton: (...props) => <CustomTabBarButton {...props} />,
         }}
       />
-      <Tab.Screen
-        name="CarsScreen"
-        component={CarsScreen}
-        options={{
-          headerShown: false,
-          tabBarStyle: { display: "none" },
-          tabBarIconStyle: { display: "none" ,  marginRight: "110%",},
-        }}
-      />
+
       <Tab.Screen
         name="SearchScreen"
         component={SearchScreen}
@@ -126,8 +128,8 @@ export default function Tabs() {
               source={require("../assets/search.png")}
               resizeMode="contain"
               style={{
-                marginTop: "35%",
-                marginRight: "80%",
+                marginTop: "75%",
+                marginRight: "250%",
                 width: 35,
                 height: 35,
                 tintColor: focused ? "#20BF8A" : "#B3B8BD",

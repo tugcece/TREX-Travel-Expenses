@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,32 +8,38 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
-import SearchScreen from "./SearchScreen";
+import OverView from "./OverView";
+import Calculus from "./Calculus";
+import MapViewDirections from "react-native-maps-directions";
+import { ScrollView } from "react-native-gesture-handler";
 
-const text = ">";
 const { width, height } = Dimensions.get("window");
 const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
 
 export default function TravelScreen({ route, navigation }) {
+  const origincity = route.params.originCity;
+  const originIATA = route.params.originIATA;
+  const destinationIATA = route.params.destinationIATA;
+  const destinationcity = route.params.destinationCity;
+  const carPoint = route.params.point;
   const originlat = route.params.origin.lat;
   const originlng = route.params.origin.lng;
   const destinationlat = route.params.destination.lat;
   const destinationlng = route.params.destination.lng;
   const desGeo = route.params.desGeo;
   const oriGeo = route.params.oriGeo;
-  const option = route.params.option;
-  const [data, setData] = useState([]);
-  const [aa, setaa] = useState("");
-  //console.log(data);
+  const gasType = route.params.option;
+  const originName = route.params.originName;
+  const destinationName = route.params.destinationName;
+  const [distance, setDistance] = useState("1");
+  const [data, setData] = useState("a");
+  const [hour, setHour] = useState("1");
+
   fetch(
-    "https://mps.googleapis.com/maps/api/distancematrix/json?origins=" +
-      oriGeo +
-      "&destinations=" +
-      desGeo +
-      "&key=" +
-      GOOGLE_API_KEY,
+    "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+oriGeo+"&destinations="+desGeo+"&key="+GOOGLE_API_KEY+"&language=en",
     {
       method: "GET",
       headers: {},
@@ -41,29 +47,23 @@ export default function TravelScreen({ route, navigation }) {
   )
     .then((response) => response.json())
     .then((response) => {
-      // setoriAddress(response.origin_addresses);
-      // setdesAddress(response.destination_addresses);
-      //  setDistance(response.rows[0].elements[0].distance.text);
-      setaa(response.rows[0].elements[0].duration);
+      setDistance(response.rows[0].elements[0].distance.value);
+      setHour(response.rows[0].elements[0].duration.text);
     })
+    .then(
+      fetch(
+        "https://api.travelpayouts.com/aviasales/v3/prices_for_dates?origin="+originIATA+"&destination="+destinationIATA+"&departure_at=2022-12-28&return_at=2022-12&unique=false&sorting=price&direct=false&currency=try&limit=2&page=1&one_way=true&token=376fe450c0003ae3b6712d3d38da5bf8",
+        {
+          method: "GET",
+          headers: {},
+        }
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          setData(response.data);
+        })
+    )
     .catch((err) => console.error(err));
-  console.log(aa);
-  /*  fetch(
-    "'https://priceline-com-provider.p.rapidapi.com/v1/flights/search?itinerary_type=ONE_WAY&class_type=ECO&location_arrival='+destination+'&date_departure=2022-11-15&location_departure='+origin+'&sort_order=PRICE&number_of_stops=1&price_max=20000&number_of_passengers=1&duration_max=2051&price_min=100&date_departure_return=2022-11-16",
-    {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": "9fd9598a03msha30b93fc06019d6p1fe1efjsna67587cc9f26",
-        "X-RapidAPI-Host": "priceline-com-provider.p.rapidapi.com",
-      },
-    }
-  )
-    .then((response) => response.json())
-    .then((response) => {
-      setData(response.airlines);
-    })
-    .catch((err) => console.error(err));
-  ]);*/
 
   const ASPECT_RATIO = width / height;
   const LATITUDE_DELTA = 0.01;
@@ -74,12 +74,7 @@ export default function TravelScreen({ route, navigation }) {
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA,
   };
-  console.log("sonuçlar");
-  console.log(originlat);
-  console.log(originlng);
-  console.log(destinationlat);
-  console.log(desGeo + oriGeo);
-  console.log(option);
+  console.log("oprtion" + gasType);
 
   return (
     <View style={[styles.root]}>
@@ -88,32 +83,18 @@ export default function TravelScreen({ route, navigation }) {
         style={styles.map}
         initialRegion={INITIAL_POSITION}
       >
-        <Polyline
-          coordinates={[
-            {
-              latitude: originlat,
-              longitude: originlng,
-            },
-            {
-              latitude: destinationlat,
-              longitude: destinationlng,
-            },
-          ]}
-          strokeColor="#000"
-          strokeColors={["black"]}
-          strokeWidth={6}
-        />
-        <Marker
-          coordinate={{
+        <MapViewDirections
+          origin={{
             latitude: originlat,
             longitude: originlng,
           }}
-        />
-        <Marker
-          coordinate={{
+          destination={{
             latitude: destinationlat,
             longitude: destinationlng,
           }}
+          apikey={GOOGLE_API_KEY}
+          strokeWidth={4}
+          strokeColor={"#20BF8A"}
         />
       </MapView>
       <TouchableOpacity
@@ -127,7 +108,7 @@ export default function TravelScreen({ route, navigation }) {
           start: "85%",
         }}
         onPress={() => {
-          navigation.navigate(SearchScreen);
+          navigation.navigate(OverView);
         }}
       >
         <Image
@@ -136,91 +117,172 @@ export default function TravelScreen({ route, navigation }) {
           resizeMode="cover"
         />
       </TouchableOpacity>
-      <View style={[styles.item2]}>
-        <View style={[styles.info]}>
-          <View style={[styles.hours]}>
-            <Image
-              style={{ start: "10%", top: "5%" }}
-              source={require("../assets/clock3.png")}
-            />
-            <Text style={[styles.address]}>1 hour 14 mins</Text>
-            <Image
-              style={{ marginStart: "25%", top: "5%" }}
-              source={require("../assets/fuel2.png")}
-            />
-            <Text
-              style={[
-                styles.address,
-                { fontSize: "30%", fontWeight: "400", top: "-2%" },
-              ]}
-            >
-              $560
-            </Text>
-          </View>
-
-          <View style={[styles.roads]}>
-            <Text style={[styles.address]}>
-              Kurtuluş, Adnan Menderes Blv. 98 B, 09020 Aydin Merkez/Aydin,
-              Turkey
-            </Text>
-            <Image
-              style={{ top: 40 }}
-              source={require("../assets/distance.png")}
-            />
-            <Text style={[styles.address]}>
-              Alsancak, 1460. Sk. No:8, 35220 Konak/İzmir, Turkey
-            </Text>
-          </View>
-          <Text style={[styles.note]}>
-            {" "}
-            Calculations are made based on an ideal speed (60 km/h - 80 km/h).
-            Speeding higher than this speed will cause you to spend more fuel
-            and increase the price.
-          </Text>
-        </View>
-
-        <FlatList
-          data={data}
-          keyExtractor={({ id }, index) => id}
-          renderItem={({ item }) => (
-            <View style={[styles.requestoptions, { marginTop: "15%" }]}>
+      <View
+        style={{
+          position: "absolute",
+          width: "110%",
+          height: "25%",
+          top: "45%",
+        }}
+      >
+        <View style={[styles.item2]}>
+          <View style={[styles.info]}>
+            <View style={[styles.hours]}>
               <Image
-                source={require("../assets/fuel-pump.png")}
-                style={[styles.icon]}
+                style={{ start: "10%", top: "4%" }}
+                source={require("../assets/clock3.png")}
               />
-              <View style={[styles.location]}>
-                <Text style={{ fontSize: "15%", fontWeight: "900" }}>
-                  {item.name}
-                </Text>
-                <Text style={{ fontSize: "15%", fontWeight: "900" }}>
-                  {" "}
-                  ---{" "}
-                </Text>
-                <Text style={{ fontSize: "15%", fontWeight: "900" }}>
-                  {item.name}
-                </Text>
-              </View>
+              <Text style={[styles.address]}>{hour}</Text>
+              <Image
+                style={{ marginStart: "25%", top: "4%" }}
+                source={require("../assets/fuel2.png")}
+              />
               <Text
-                style={{
-                  fontSize: "25%",
-                  fontWeight: "500",
-                  textAlign: "center",
-                  marginHorizontal: "38%",
-                  marginVertical: "30%",
-                  width: "30%",
-                  height: "20%",
-                  zIndex: 1,
-                }}
+                style={[
+                  styles.address,
+                  { fontSize: "30%", fontWeight: "400", top: "-5%" },
+                ]}
               >
-                1238,95
+                <Calculus
+                  distances={distance}
+                  gasType={gasType}
+                  carpoint={carPoint}
+                />
               </Text>
-              <View style={[styles.price]}></View>
-              <Pressable style={[styles.btn]}>
-                <Text style={[styles.btntext]}>{text}</Text>
-              </Pressable>
             </View>
-          )}
-        />
+
+            <View style={[styles.roads]}>
+              <Text style={[styles.address]}>{originName}</Text>
+              <Image
+                style={{ top: 40, right: 8 }}
+                source={require("../assets/distance.png")}
+              />
+              <Text style={[styles.address]}>{destinationName}</Text>
+            </View>
+            <Text style={[styles.note]}>
+              {" "}
+              Calculations are made based on an ideal speed (60 km/h - 80 km/h).
+              Speeding higher than this speed will cause you to spend more fuel
+              and increase the price.
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            position: "absolute",
+            top: "110%",
+            zIndex: 1,
+            width: "100%",
+            height: "105%",
+          }}
+        >
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.key}
+            renderItem={({ item }) => (
+              <View style={[styles.requestoptions]}>
+                <Image
+                  source={require("../assets/thy.png")}
+                  style={[styles.icon]}
+                />
+                <View style={[styles.location]}>
+                  <Text style={{ fontSize: "20%", fontWeight: "900" }}>
+                    {item.origin_airport}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: "10%",
+                      fontWeight: "200",
+                      right: "130%",
+                      top: "15%",
+                    }}
+                  >
+                    {origincity}
+                  </Text>
+                  <Image
+                    style={{ right: "40%" }}
+                    source={require("../assets/departure.png")}
+                  />
+                  <Text style={{ fontSize: "20%", fontWeight: "900" }}>
+                    {item.destination_airport}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: "10%",
+                      fontWeight: "200",
+                      right: "130%",
+                      top: "15%",
+                    }}
+                  >
+                    {destinationcity}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    fontSize: "25%",
+                    fontWeight: "500",
+                    position: "absolute",
+                    width: "60%",
+                    height: "20%",
+                    left: "20%",
+                    top: "15%",
+                    borderBottomColor: "#20BF8A",
+                    borderBottomWidth: 1,
+                    position: "absolute",
+                    zIndex: 1,
+                    paddingLeft: "5%",
+                  }}
+                >
+                  <Image
+                    style={{ bottom: "30%", left: "5%" }}
+                    source={require("../assets/plane-ticket.png")}
+                  />
+                  <Text
+                    style={{
+                      fontSize: "21%",
+                      fontWeight: "500",
+                      left: "20%",
+                      top: "-160%",
+                    }}
+                  >
+                    ₺{item.price / 2}
+                  </Text>
+                  <Image
+                    style={{
+                      start: "79%",
+                      top: "-180%",
+                      width: 10,
+                      height: 10,
+                    }}
+                    source={require("../assets/clock3.png")}
+                  />
+                  <Text
+                    style={{
+                      fontSize: "12%",
+                      fontWeight: "100",
+                      left: "85%",
+                      top: "-240%",
+                    }}
+                  >
+                    {item.duration}m
+                  </Text>
+                </View>
+                <Pressable
+                  style={[styles.btn]}
+                  onPress={() =>
+                    Linking.openURL("https://www.aviasales.com" + item.link)
+                  }
+                >
+                  <Image
+                    style={{ marginTop: "60%", start: "20%" }}
+                    source={require("../assets/fast-forward.png")}
+                    resizeMode="cover"
+                  />
+                </Pressable>
+              </View>
+            )}
+          />
+        </View>
       </View>
     </View>
   );
@@ -233,13 +295,14 @@ var styles = StyleSheet.create({
     alignItems: "center",
   },
   item2: {
-    height: "25%",
-    width: "90%",
+    height: "100%",
+    left: "8%",
+    width: "85%",
     borderRadius: "30%",
     backgroundColor: "#FAFAFC",
-    marginTop: "130%",
-    position: "absolute",
+    marginTop: "5%",
     shadowColor: "#000",
+    zIndex: 2,
     shadowOpacity: 0.05,
     shadowOffset: {
       width: 5,
@@ -247,13 +310,14 @@ var styles = StyleSheet.create({
     },
   },
   requestoptions: {
-    width: "90%",
-    height: "30%",
-    marginHorizontal: "5%",
-    marginVertical: "2%",
+    width: "85%",
+    height: "75%",
+    marginHorizontal: "7%",
+    marginTop: "1%",
     backgroundColor: "white",
-    borderRadius: "15%",
+    borderRadius: "30%",
     shadowColor: "black",
+    shadowColor: "#000",
     shadowOpacity: 0.09,
     shadowOffset: {
       width: 5,
@@ -261,31 +325,25 @@ var styles = StyleSheet.create({
     },
   },
   icon: {
-    marginVertical: "8%",
-    marginHorizontal: "3%",
+    width: 50,
+    height: 50,
+    marginHorizontal: "5%",
+    top: "30%",
   },
   btn: {
-    width: "8%",
-    height: "75%",
+    width: "10%",
+    height: "65%",
+    position: "absolute",
     borderRadius: "5%",
     backgroundColor: "#20BF8A",
-    marginStart: "87%",
-    marginVertical: "11%",
+    right: "5%",
+    top: "15%",
   },
-  btntext: {
-    textAlign: "center",
-    marginVertical: "120%",
-    fontSize: "15%",
-    fontWeight: "700",
-    color: "white",
-  },
+
   location: {
-    fontSize: "15%",
-    fontWeight: "700",
     width: "40%",
-    marginHorizontal: "35%",
-    marginVertical: "-25%",
     flexDirection: "row",
+    left: "110%",
   },
   price: {
     width: "30%",
@@ -293,6 +351,7 @@ var styles = StyleSheet.create({
     backgroundColor: "#20BF8A",
     marginVertical: "-33%",
     marginHorizontal: "38%",
+    backgroundColor: "blue",
   },
   map: {
     width: Dimensions.get("window").width,
@@ -313,10 +372,10 @@ var styles = StyleSheet.create({
   info: {
     width: "100%",
     height: "100%",
-    padding: "4%",
+    padding: "3%",
   },
   hours: {
-    height: "25%",
+    height: "27%",
     flexDirection: "row",
     marginVertical: "30%",
     marginTop: "-2%",
@@ -325,6 +384,6 @@ var styles = StyleSheet.create({
   },
   note: {
     fontWeight: "100",
-    fontSize: 10,
+    fontSize: 6,
   },
 });

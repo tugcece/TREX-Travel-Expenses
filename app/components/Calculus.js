@@ -1,55 +1,43 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { Text } from "react-native";
 
-const GOOGLE_API_KEY = "AIzaSyCmDwnqi7W8fqlyvGdMMM9eLXQOggNONAc";
+var gasLitreCost = 0;
+const currency = 19;
 
-export default  function Calculus({ origeo, desgeo, fueltype, point }) {
-  const [oriAddress, setoriAddress] = useState("");
-  const [desAddress, setdesAddress] = useState("");
-  const [distance, setDistance] = useState("");
-  const [aa, setaa] = useState("");
-  const [origin, setOrigin] = useState(origeo);
-  const [destination, setDestination] = useState(desgeo);
+export default function Calculus({ distances, gasType, carpoint }) {
+  const [diesel, setDiesel] = useState([]);
+  const [gasoline, setGasoline] = useState([]);
+  const [lpg, setLpg] = useState([]);
   const litresPerKM = 10 / 100;
-  const gasLitreCoast = 200;
-  const carPoint = 2;
-  const litreCoastKm = litresPerKM * gasLitreCoast * carPoint;
-  
-   fetch(
-     "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origeo+"&destinations="+desgeo+"&key="+GOOGLE_API_KEY,
-    {
-      method: "GET",
-      headers: {},
-    }
-  )
+  fetch("https://api.collectapi.com/gasPrice/fromCity?city=istanbul", {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+      authorization: "apikey 6uihXXG9EmAQCbsqlYyeMU:2RylOQyFvktsMKDIG8SVwl",
+    },
+  })
     .then((response) => response.json())
     .then((response) => {
-      setoriAddress(response.origin_addresses);
-      setdesAddress(response.destination_addresses);
-      setDistance(response.rows[0].elements[0].distance.text);
-      setaa(response.rows[0].elements[0].duration);
+      setGasoline(response.result.gasoline);
+      setDiesel(response.result.diesel);
+      setLpg(response.result.lpg);
     })
     .catch((err) => console.error(err));
-  const cost = Math.floor(100 * litreCoastKm);
-  return (
-    <View style={styles.container}>
-      <Text style={styles.advice}>Kurtuluş, Adnan Menderes Blv. 98 B, 09020 Aydin Merkez/Aydin, Turkey</Text>
-      <Text style={styles.advice}>Alsancak, 1460. Sk. No:8, 35220 Konak/İzmir, Turkey</Text>
-      <Text style={styles.advice}>{cost}</Text>
-    </View>
-  );
+  if (gasType == "gasoline") {
+    gasLitreCost = gasoline;
+    console.log("gasoline" + gasoline);
+  } else if (gasType == "lpg") {
+    gasLitreCost = lpg;
+    console.log(lpg);
+  } else {
+    gasLitreCost = diesel;
+    console.log("diesel" + diesel);
+  }
+  console.log("litresperkm" + litresPerKM);
+  console.log("gasLitrecost" + gasLitreCost);
+  console.log("carpoint" + carpoint);
+  console.log("distancesdistance" + distances);
+  const litreCostKm = litresPerKM * gasLitreCost * carpoint * currency;
+  const cost = Math.floor((distances / 1000) * litreCostKm);
+  return <Text>₺{cost}</Text>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  advice: {
-    fontSize: 10,
-    fontWeight: "bold",
-    marginHorizontal: 20,
-  },
-});

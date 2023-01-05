@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ImageBackground } from "react-native";
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
-import Chart from "./Chart";
+
 
 const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
 const viewheight = 390;
 const viewwidth = 315;
+const currency = 19;
 
-function HomeScreen({ route, navigation }) {
+function OverView({ route, navigation }) {
   const [data, setData] = useState([]);
+  const [data2, setData2] = useState([]);
+  const [price, setPrice] = useState([]);
 
   const ASPECT_RATIO = viewwidth / viewheight;
   const LATITUDE_DELTA = 0.01;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const INITIAL_POSITION = {
-    latitude: 37.761749,
-    longitude: 27.70397,
+    latitude: 37.74587650000001,
+    longitude: 29.1082623,
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA,
   };
+
   fetch(
-    //  "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=37.76174900,27.70397000&rankby=distance&type=gas_station&key=AIzaSyCmDwnqi7W8fqlyvGdMMM9eLXQOggNONAc",
+    "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=37.739787,29.101539&rankby=distance&type=gas_station&key="+GOOGLE_API_KEY,
     {
       method: "GET",
       headers: {},
@@ -28,16 +32,31 @@ function HomeScreen({ route, navigation }) {
   )
     .then((response) => response.json())
     .then((response) => {
-      setData(response.results[0]);
-      console.log(response);
+      setData(response.results[0].geometry.location.lat);
+      setData2(response.results[0].geometry.location.lng);
+      console.log(data);
+      console.log(data2);
       console.log("*****************************************");
     })
     .catch((err) => console.error(err));
+  fetch("https://api.collectapi.com/gasPrice/fromCity?city=istanbul", {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+      authorization: "apikey 5CCUZiDxWLZSQjMyOPnax6:325eFkF0G9XCK7oNj4jZDM",
+    },
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      setPrice(response.result);
+    })
+    .catch((err) => console.error(err));
+  console.log(price);
   return (
     <View style={styles.root}>
       <View style={[styles.item]}>
         <ImageBackground
-          style={{ flex: 1 ,top:'-10%' }}
+          style={{ flex: 1, top: "-10%" }}
           source={require("../assets/bckgrnd.png")}
           resizeMode="cover"
         />
@@ -50,7 +69,7 @@ function HomeScreen({ route, navigation }) {
         </Text>
         <View style={[styles.fuel]}>
           <View style={[styles.fueltypes]}>
-            <Text style={[styles.fuelprice]}>$45,90</Text>
+            <Text style={[styles.fuelprice]}>₺{price.gasoline * currency}</Text>
             <Text style={[styles.fueltext, { marginStart: "30%" }]}>
               Gasoline
             </Text>
@@ -60,7 +79,7 @@ function HomeScreen({ route, navigation }) {
             />
           </View>
           <View style={[styles.fueltypes]}>
-            <Text style={[styles.fuelprice]}>$55,00</Text>
+            <Text style={[styles.fuelprice]}>₺{price.diesel * currency}</Text>
             <Text style={[styles.fueltext, { marginStart: "35%" }]}>
               Diesel
             </Text>
@@ -70,7 +89,7 @@ function HomeScreen({ route, navigation }) {
             />
           </View>
           <View style={[styles.fueltypes]}>
-            <Text style={[styles.fuelprice]}>$88,98</Text>
+            <Text style={[styles.fuelprice]}>₺{price.lpg * currency}</Text>
             <Text style={[styles.fueltext, { marginStart: "40%" }]}>Lpg</Text>
             <Image
               source={require("../assets/purplechart.png")}
@@ -91,8 +110,8 @@ function HomeScreen({ route, navigation }) {
           >
             <Marker
               coordinate={{
-                latitude: 37.761749,
-                longitude: 27.70397,
+                latitude: 37.74587650000001,
+                longitude: 29.1082623,
               }}
             />
           </MapView>
@@ -101,7 +120,7 @@ function HomeScreen({ route, navigation }) {
     </View>
   );
 }
-export default HomeScreen;
+export default OverView;
 const styles = StyleSheet.create({
   root: {
     flex: 1,
