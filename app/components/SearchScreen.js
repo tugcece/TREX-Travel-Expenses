@@ -12,7 +12,7 @@ import Cars from "./CarsScreen";
 import RadioButton from "./RadioButton";
 import vwradiobtn from "./RadioButtonData";
 
-const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
+const GOOGLE_API_KEY = "Google APi Key";//Google API Key'inizi yazarak çalıştırabilirsiniz.
 const spacing = "2%";
 
 function SearchScreen({route,navigation }) {
@@ -36,7 +36,7 @@ function SearchScreen({route,navigation }) {
   });
   var year = new Date().getFullYear();
   fetch(
-    'https://autocomplete.travelpayouts.com/places2?locale=en&types[]=airport&types[]=city&term='+originCity+'&token=376fe450c0003ae3b6712d3d38da5bf8',
+    'https://autocomplete.travelpayouts.com/places2?locale=en&types[]=airport&types[]=city&term='+originCity+'&token=apikey',//apikey kısmına travelpayout api key değeriniz giriniz.
      {
        method: "GET",
        headers: {},
@@ -48,7 +48,7 @@ function SearchScreen({route,navigation }) {
      .catch((err) => console.error(err));
      console.log(originIATA)
      fetch(
-     'https://autocomplete.travelpayouts.com/places2?locale=en&types[]=airport&types[]=city&term='+destinationCity+'&token=376fe450c0003ae3b6712d3d38da5bf8',
+     'https://autocomplete.travelpayouts.com/places2?locale=en&types[]=airport&types[]=city&term='+destinationCity+'&token=apikey',//apikey kısmına travelpayout api key değeriniz giriniz.
        {
          method: "GET",
          headers: {},
@@ -83,11 +83,7 @@ function SearchScreen({route,navigation }) {
               setOriginName(details?.formatted_address);
               setOriginCity(details?.address_components[4].long_name);
               setOrigin(details?.geometry?.location);
-              setOriGeo(
-                details?.geometry?.location.lat +
-                  "%2C" +
-                  details?.geometry?.location.lng
-              );
+              setOriGeo(details?.geometry?.location.lat+"%2C"+details?.geometry?.location.lng);
             }}
             onFail={(error) => console.error(error)}
           />
@@ -95,22 +91,18 @@ function SearchScreen({route,navigation }) {
         <View style={[styles.search2]}>
           <GooglePlacesAutocomplete
             GooglePlacesDetailsQuery={{ fields:'formatted_address,geometry,address_components'}}
-            fetchDetails={true} // you need this to fetch the details object onPress
+            fetchDetails={true} 
             placeholder="Search"
             query={{
               key: GOOGLE_API_KEY,
-              language: "en", // language of the results
+              language: "en", 
             }}
             onPress={(data, details) => {
               setDestinationName(details?.formatted_address);
               setDestinationCity(details?.address_components[4].long_name);
               console.log(details?.formatted_address);
               setDestination(details?.geometry?.location);
-              setDesGeo(
-                details?.geometry?.location.lat +
-                  "%2C" +
-                  details?.geometry?.location.lng
-              );
+              setDesGeo(details?.geometry?.location.lat+"%2C"+details?.geometry?.location.lng);
             }}
             onFail={(error) => console.error(error)}
           />

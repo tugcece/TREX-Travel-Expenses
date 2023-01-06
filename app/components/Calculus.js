@@ -13,7 +13,7 @@ export default function Calculus({ distances, gasType, carpoint }) {
     method: "GET",
     headers: {
       "content-type": "application/json",
-      authorization: "apikey 6uihXXG9EmAQCbsqlYyeMU:2RylOQyFvktsMKDIG8SVwl",
+      authorization: "apikey ",//collect api gas prices api key değerini giriniz.
     },
   })
     .then((response) => response.json())

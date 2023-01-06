@@ -10,14 +10,14 @@ import {
   TouchableOpacity,
   Linking,
 } from "react-native";
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import OverView from "./OverView";
 import Calculus from "./Calculus";
 import MapViewDirections from "react-native-maps-directions";
-import { ScrollView } from "react-native-gesture-handler";
+
 
 const { width, height } = Dimensions.get("window");
-const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
+const GOOGLE_API_KEY = "Google APi Key";//Google API Key'inizi yazarak çalıştırabilirsiniz.
 
 export default function TravelScreen({ route, navigation }) {
   const origincity = route.params.originCity;
@@ -52,7 +52,7 @@ export default function TravelScreen({ route, navigation }) {
     })
     .then(
       fetch(
-        "https://api.travelpayouts.com/aviasales/v3/prices_for_dates?origin="+originIATA+"&destination="+destinationIATA+"&departure_at=2022-12-28&return_at=2022-12&unique=false&sorting=price&direct=false&currency=try&limit=2&page=1&one_way=true&token=376fe450c0003ae3b6712d3d38da5bf8",
+        "https://api.travelpayouts.com/aviasales/v3/prices_for_dates?origin="+originIATA+"&destination="+destinationIATA+"&departure_at=2022-12-28&return_at=2022-12&unique=false&sorting=price&direct=false&currency=try&limit=2&page=1&one_way=true&token=apikey",//apikey kısmına travelpayout api key değeriniz giriniz.
         {
           method: "GET",
           headers: {},
@@ -74,7 +74,6 @@ export default function TravelScreen({ route, navigation }) {
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA,
   };
-  console.log("oprtion" + gasType);
 
   return (
     <View style={[styles.root]}>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, ImageBackground } from "react-native";
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 
-const GOOGLE_API_KEY = "AIzaSyCc5YIuRs1eJf3d0f5j6N0Zp2UIhFTvZlE";
+const GOOGLE_API_KEY = "Google APi Key";//Google API Key'inizi yazarak çalıştırabilirsiniz.
 const viewheight = 390;
 const viewwidth = 315;
 const currency = 19;
@@ -34,16 +34,13 @@ function OverView({ route, navigation }) {
     .then((response) => {
       setData(response.results[0].geometry.location.lat);
       setData2(response.results[0].geometry.location.lng);
-      console.log(data);
-      console.log(data2);
-      console.log("*****************************************");
     })
     .catch((err) => console.error(err));
   fetch("https://api.collectapi.com/gasPrice/fromCity?city=istanbul", {
     method: "GET",
     headers: {
       "content-type": "application/json",
-      authorization: "apikey 5CCUZiDxWLZSQjMyOPnax6:325eFkF0G9XCK7oNj4jZDM",
+      authorization: "apikey",//collect api gas prices api key değerini giriniz.
     },
   })
     .then((response) => response.json())
@@ -110,8 +107,8 @@ function OverView({ route, navigation }) {
           >
             <Marker
               coordinate={{
-                latitude: 37.74587650000001,
-                longitude: 29.1082623,
+                latitude: {data},
+                longitude:{data2},
               }}
             />
           </MapView>
